@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RATUPRINTING POS v1.3.4</title>
+<style>
+/* ============================================================
+   RATUPRINTING POS v1.3 — DESIGN SYSTEM
+   ============================================================ */
+:root{
+  --p:#2563eb;--p2:#60a5fa;--green:#16a34a;--amber:#d97706;--red:#ef4444;
+  --bg:#f4f7fb;--card:#ffffff;--card2:#f8fafc;--bd:#dbe3ef;--text:#172033;
+  --muted:#64748b;--sidebar:#0f172a;--input:#ffffff;--shadow:0 10px 28px rgba(15,23,42,.08);
+}
+:root[data-theme="dark"]{
+  --bg:#090d12;--card:#141a22;--card2:#0f151c;--bd:#2a3543;--text:#edf2f7;
+  --muted:#94a3b8;--sidebar:#070b10;--input:#0d131a;--shadow:0 10px 28px rgba(0,0,0,.24);
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text);padding-bottom:76px}
+button,input,select,textarea{font:inherit}button{border:0;border-radius:9px;padding:9px 12px;font-weight:800;cursor:pointer;background:#e8eef8;color:#243247}
+:root[data-theme="dark"] button{background:#253142;color:#e7edf6}button:hover{filter:brightness(1.06)}button.primary{background:var(--p);color:#fff}.success{background:var(--green)!important;color:#fff!important}.warning{background:var(--amber)!important;color:#fff!important}.danger{background:#b91c1c!important;color:#fff!important}.ghost{background:transparent!important;border:1px solid var(--bd)!important;color:var(--text)!important}
+input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--input);color:var(--text);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--p)}label{font-size:12px;font-weight:800;display:block;margin:8px 0 5px;color:var(--muted)}
+h1,h2,h3{margin-top:0}.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}aside{background:var(--sidebar);color:#fff;padding:18px;position:sticky;top:0;height:100vh;z-index:5}.brand{font-size:22px;font-weight:950;margin:4px 6px 22px}.brand small{display:block;font-size:10px;color:#94a3b8;margin-top:4px;letter-spacing:.8px}.nav button{width:100%;text-align:left;background:transparent!important;color:#cbd5e1!important;margin:3px 0}.nav button.active,.nav button:hover{background:#1e293b!important;color:#fff!important}.main{padding:26px;max-width:1600px;width:100%;margin:auto}.page{display:none}.page.active{display:block}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}.toolbar h1{margin:0}.grid{display:grid;gap:15px}.g2{grid-template-columns:1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}.g5{grid-template-columns:repeat(5,1fr)}.row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.row2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:13px;padding:17px;box-shadow:var(--shadow)}.stat span{display:block;color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.3px}.stat b{font-size:24px;display:block;margin-top:7px}.muted{color:var(--muted);font-size:12px}.notice{background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.25);padding:11px;border-radius:9px;font-size:12px;color:var(--p2)}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px;border-bottom:1px solid var(--bd);text-align:left;vertical-align:top}th{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}.table-wrap{overflow:auto}.badge{display:inline-block;border-radius:99px;padding:4px 8px;font-size:10px;font-weight:900;background:rgba(37,99,235,.13);color:var(--p2)}.badge.ok{background:rgba(22,163,74,.15);color:#4ade80}.badge.warn{background:rgba(217,119,6,.15);color:#fbbf24}.badge.bad{background:rgba(239,68,68,.15);color:#f87171}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{padding:7px 9px;font-size:11px}.recipe,.cart,.low-item{border:1px solid var(--bd);padding:10px;margin:8px 0;border-radius:9px;background:var(--card2)}.total{background:#0f172a;color:#fff;padding:15px;border-radius:10px;margin-top:10px}.total b{font-size:24px}.empty{text-align:center;color:var(--muted);padding:30px 8px}
+.modal{display:none;position:fixed;inset:0;background:#000a;z-index:50;padding:20px;overflow:auto}.modal.show{display:flex;align-items:flex-start;justify-content:center}.box{width:min(900px,100%);margin:20px auto;background:var(--card);color:var(--text);padding:20px;border-radius:14px;box-shadow:0 25px 60px #0008}.modal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.modal-head h2{margin:0}
+/* Low stock alert */
+.low-stock-row,.low-stock-card{border-color:#ef4444!important;background:rgba(239,68,68,.10)!important;animation:stockPulse 1.05s ease-in-out infinite}.low-stock-row td:first-child,.low-stock-card b{color:#f87171}@keyframes stockPulse{0%,100%{box-shadow:0 0 0 rgba(239,68,68,0)}50%{box-shadow:0 0 0 3px rgba(239,68,68,.35),0 0 20px rgba(239,68,68,.18)}}
+.stock-meter{height:7px;background:var(--bd);border-radius:20px;overflow:hidden;margin-top:6px}.stock-meter i{display:block;height:100%;background:var(--green)}.stock-meter.low i{background:var(--red)}
+/* Revenue chart */
+.chart-wrap{min-height:300px}.chart{width:100%;height:280px;display:block}.chart-grid{stroke:var(--bd);stroke-width:1}.chart-label{fill:var(--muted);font-size:10px}.chart-bar{fill:var(--p)}.chart-value{fill:var(--text);font-size:10px;font-weight:800}
+/* Decorative runner */
+.money-runner{position:fixed;left:0;right:0;bottom:0;height:70px;pointer-events:none;z-index:4;overflow:hidden;opacity:.80;background:linear-gradient(180deg,transparent,var(--bg))}.runner{position:absolute;bottom:4px;left:-120px;font-size:41px;animation:runAcross 13s linear infinite}.runner .dollar{display:inline-block;margin:0 10px;font-size:24px;animation:dollarHop 1s ease-in-out infinite}.runner .man{display:inline-block;animation:stickJump .72s ease-in-out infinite}@keyframes runAcross{from{transform:translateX(0)}to{transform:translateX(calc(100vw + 240px))}}@keyframes stickJump{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-20px) rotate(4deg)}}@keyframes dollarHop{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+/* Invoice 20cm x 8cm */
+/* Invoice 20cm x 8cm — full-width print layout */
+.invoice-preview-wrap{width:100%;overflow:auto;-webkit-overflow-scrolling:touch;padding:2px}
+.invoice-sheet{box-sizing:border-box;width:200mm;height:80mm;min-height:80mm;background:#fff;color:#000;padding:4mm 6mm;font-family:Arial,Helvetica,sans-serif;font-size:9.5pt;line-height:1.22;border:1px solid #ddd;overflow:hidden}
+.invoice-head{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:10mm;border-bottom:1px solid #000;padding-bottom:2.2mm}
+.invoice-title{font-size:15pt;font-weight:900;line-height:1}.invoice-meta{text-align:right;font-size:8.5pt;line-height:1.25;white-space:nowrap}
+.invoice-sheet table{width:100%!important;table-layout:fixed;font-size:8.7pt;margin-top:1.5mm;border-collapse:collapse}
+.invoice-sheet th,.invoice-sheet td{padding:1.2mm 1.4mm;border-bottom:1px solid #d7d7d7;color:#000;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.invoice-sheet th:nth-child(1),.invoice-sheet td:nth-child(1){width:46%}.invoice-sheet th:nth-child(2),.invoice-sheet td:nth-child(2){width:10%;text-align:center}.invoice-sheet th:nth-child(3),.invoice-sheet td:nth-child(3){width:20%;text-align:right}.invoice-sheet th:nth-child(4),.invoice-sheet td:nth-child(4){width:24%;text-align:right}
+.invoice-foot{width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(55mm,.55fr);gap:8mm;margin-top:1.7mm;font-size:8.5pt;line-height:1.28}.invoice-total{text-align:right}.invoice-total b{font-size:10.5pt}
+
+/* ============================================================
+   RESPONSIVE ENGINE — desktop, laptop, tablet, Android/mobile
+   ============================================================ */
+.main{min-width:0}.card,.box,.page,.table-wrap{min-width:0}.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}img,svg,canvas{max-width:100%}
+@media(max-width:1280px){.app{grid-template-columns:220px minmax(0,1fr)}.main{padding:20px}.g5{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:960px){body{padding-bottom:68px}.app{grid-template-columns:1fr}aside{position:sticky;top:0;height:auto;padding:10px 12px;z-index:30}.brand{margin:0 4px 8px;font-size:18px}.brand small{display:inline;margin-left:8px}.nav{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;padding-bottom:2px}.nav button{width:auto;min-width:max-content;white-space:nowrap;margin:0;padding:8px 10px}.main{padding:14px}.g2,.row,.row2{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar{gap:8px;flex-wrap:wrap}.box{width:min(96vw,900px);margin:8px auto;padding:15px}.modal{padding:8px}.chart-wrap{min-height:240px}.chart{height:auto;min-height:220px}}
+@media(max-width:680px){body{font-size:14px}.brand small{display:none}.main{padding:10px}.card{padding:12px;border-radius:10px}.g2,.g4,.g5,.row,.row2{grid-template-columns:1fr}.toolbar{align-items:stretch;flex-direction:column}.toolbar>button,.toolbar>.actions{width:100%}.toolbar>.actions button{flex:1}.actions{width:100%}.actions button{flex:1 1 auto}.stat b{font-size:20px}table{font-size:12px;min-width:640px}th,td{padding:8px}.modal-head{align-items:flex-start}.box{width:98vw;max-height:94vh;overflow:auto;padding:12px}.invoice-preview-wrap{max-width:100%;overflow:auto}.money-runner{height:58px}.runner{font-size:34px}}
+@media(max-width:420px){.main{padding:8px}.nav button{font-size:12px;padding:8px}.card{padding:10px}.box{padding:10px}.actions button{font-size:11px;padding:8px}.invoice-sheet{transform-origin:top left}}
+
+/* Print only the invoice. Browser-generated header/footer is suppressed by zero page margins. */
+@media print{
+  /* A5 landscape: invoice selalu dimulai dari pojok kiri atas halaman. */
+  html,body{width:210mm!important;height:148mm!important;margin:0!important;padding:0!important;background:#fff!important;overflow:hidden!important}
+  body *{visibility:hidden!important}
+  .money-runner,.modal-head,#invoiceModal .actions{display:none!important}
+  #invoiceModal{display:block!important;visibility:visible!important;position:absolute!important;top:0!important;left:0!important;width:210mm!important;height:148mm!important;background:#fff!important;padding:0!important;margin:0!important;overflow:hidden!important}
+  #invoiceModal .box{display:block!important;visibility:visible!important;position:absolute!important;top:0!important;left:0!important;width:210mm!important;height:148mm!important;max-width:none!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important;overflow:hidden!important}
+  .invoice-preview-wrap{display:block!important;visibility:visible!important;position:absolute!important;top:0!important;left:0!important;width:200mm!important;height:80mm!important;margin:0!important;padding:0!important;overflow:hidden!important}
+  #invoicePrint,#invoicePrint *{visibility:visible!important}
+  #invoicePrint{display:block!important;position:absolute!important;top:0!important;left:0!important;box-sizing:border-box!important;width:200mm!important;height:80mm!important;min-height:80mm!important;margin:0!important;padding:4mm 6mm!important;border:0!important;overflow:hidden!important;background:#fff!important;color:#000!important;transform:none!important}
+  #invoicePrint table{width:100%!important}
+  @page{size:A5 landscape;margin:0!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand">RATUPRINTING<small>PRINTING POS & STOCK v1.3.2</small></div>
+  <nav class="nav" id="nav">
+    <button class="active" data-page="dash">🏠 Dashboard</button>
+    <button data-page="cashier">🛒 Kasir</button>
+    <button data-page="products">📦 Produk</button>
+    <button data-page="materials">🧱 Bahan Baku</button>
+    <button data-page="customers">👤 Pelanggan</button>
+    <button data-page="production">🏭 Produksi</button>
+    <button data-page="transactions">📋 Transaksi</button>
+    <button data-page="reports">📊 Laporan</button>
+    <button data-page="settings">⚙️ Pengaturan</button>
+  </nav>
+</aside>
+<main class="main">
+<section id="dash" class="page active">
+  <div class="toolbar"><div><h1>Dashboard</h1><div class="muted">Pendapatan dihitung berdasarkan uang yang benar-benar diterima pada tanggal pembayaran.</div></div></div>
+  <div class="grid g5" id="incomeStats"></div>
+  <div class="grid g2" style="margin-top:15px">
+    <div class="card"><h3>🚨 Stok Bahan Menipis</h3><div id="lowStockList"></div></div>
+    <div class="card"><h3>📋 Transaksi Terbaru</h3><div id="recentTransactions"></div></div>
+  </div>
+  <div class="card chart-wrap" style="margin-top:15px"><h3>📈 Grafik Pendapatan 12 Bulan Terakhir</h3><div id="dashboardChart"></div></div>
+</section>
+
+<section id="cashier" class="page">
+  <div class="toolbar"><div><h1>Kasir</h1><div class="muted">Semua stok divalidasi terlebih dahulu, baru dikurangi sekaligus.</div></div><button onclick="clearCart()">↺ Kosongkan Keranjang</button></div>
+  <div class="grid g2">
+    <div class="card">
+      <h3>Tambah Produk</h3>
+      <div class="row2">
+        <div><label>Produk</label><select id="cashProduct"></select></div>
+        <div><label>🔎 Cari Produk</label><input id="cashProductSearch" placeholder="Ketik 1 huruf atau lebih..." oninput="filterCashProducts()"></div>
+      </div>
+      <div class="notice" id="cashProductSearchInfo">Ketik nama produk di pencarian. Produk dengan huruf/nama yang serupa akan langsung muncul.</div>
+      <label>Nama Produk Custom (opsional)</label><input id="cashProductCustomName" placeholder="Contoh: Stempel Bulat Petani">
+      <div class="muted" style="margin-top:-4px;margin-bottom:8px;font-size:11px">Kosongkan jika ingin memakai nama asli produk. Nama custom hanya berlaku untuk transaksi ini dan akan tampil di keranjang serta invoice.</div>
+      <label>Jumlah</label><input id="cashQty" type="number" min="1" value="1"><button class="primary" style="margin-top:10px" onclick="addCart()">+ Tambah Keranjang</button>
+      <hr>
+      <h3>📐 Custom Harga Ukuran</h3>
+      <div class="notice">Masukkan ukuran dalam <b>cm</b>. Sistem otomatis mengubah ukuran ke meter dan menghitung: <b>(lebar ÷ 100) × (tinggi ÷ 100) × harga custom</b>.</div>
+      <label>Nama Produk / Pesanan</label><input id="customName" placeholder="Contoh: Stiker Cetak">
+      <div class="row2"><div><label>Lebar (cm)</label><input id="customWidth" type="number" min="0" step="0.01" placeholder="Contoh: 50" oninput="updateCustomPrice()"></div><div><label>Tinggi (cm)</label><input id="customHeight" type="number" min="0" step="0.01" placeholder="Contoh: 40" oninput="updateCustomPrice()"></div></div>
+      <label>Harga Custom per m² (Rp)</label><input id="customBasePrice" type="number" min="0" step="1" placeholder="Contoh: 120000" oninput="updateCustomPrice()">
+      <div class="notice" id="customFormula">Masukkan lebar, tinggi, dan harga untuk menghitung otomatis.</div>
+      <label>Harga Hasil Kalkulasi (Rp) <span class="muted">— bisa diubah</span></label><input id="customCalculatedPrice" type="text" inputmode="numeric" autocomplete="off" placeholder="Hasil kalkulasi otomatis" onblur="formatCustomCalculatedInput()">
+      <label class="check-row" style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer"><input id="customShowSizeInvoice" type="checkbox" checked style="width:auto;margin:0"> Tampilkan ukuran di invoice</label>
+      <label>Jumlah Custom</label><input id="customQty" type="number" min="1" value="1">
+      <button class="primary" style="margin-top:10px" onclick="addCustomCart()">+ Tambah Custom ke Keranjang</button>
+      <hr><label>Pelanggan</label><select id="cashCustomer"></select><label>Nama pelanggan baru (opsional)</label><input id="quickCustomer" placeholder="Nama pelanggan">
+    </div>
+    <div class="card">
+      <h3>Keranjang</h3><div id="cartList"></div>
+      <div class="row"><div><label>Diskon (Rp)</label><input id="discount" type="number" min="0" value="0" oninput="renderCart()"></div><div><label>DP / Dibayar (Rp)</label><input id="paidNow" type="number" min="0" value="0" oninput="renderCart()"></div><div><label>Metode</label><select id="paymentMethod"><option>Tunai</option><option>Transfer</option><option>QRIS</option><option>Utang</option></select></div></div>
+      <label>Status Produksi Awal</label><select id="productionStatus"><option>Menunggu Pembayaran</option><option>Menunggu Desain</option><option>Sedang Desain</option><option>Menunggu Persetujuan</option><option>Sedang Dicetak</option><option>Finishing</option></select>
+      <div class="total"><b id="cartTotal">Rp0</b><div id="cartInfo"></div></div><button class="success" style="width:100%;margin-top:10px" onclick="checkout()">✓ Proses Transaksi & Kurangi Stok</button>
+    </div>
+  </div>
+</section>
+
+<section id="products" class="page"><div class="toolbar"><div><h1>Produk</h1><div class="muted">Produk boleh memiliki stok sendiri atau hanya memakai bahan baku.</div></div><button class="primary" onclick="openProduct()">+ Tambah Produk</button></div><div class="card table-wrap" id="productTable"></div></section>
+<section id="materials" class="page"><div class="toolbar"><div><h1>Bahan Baku</h1><div class="muted">Untuk bahan CM, lebar, tinggi, dan luas tersisa dicatat bersama.</div></div><button class="primary" onclick="openMaterial()">+ Tambah Bahan</button></div><div class="card table-wrap" id="materialTable"></div></section>
+<section id="customers" class="page"><div class="toolbar"><h1>Pelanggan</h1><button class="primary" onclick="openCustomer()">+ Tambah Pelanggan</button></div><div class="card table-wrap" id="customerTable"></div></section>
+<section id="production" class="page"><div class="toolbar"><div><h1>Produksi</h1><div class="muted">Pesanan tidak dapat ditandai “Sudah Diambil” jika masih memiliki sisa pembayaran.</div></div></div><div class="card" id="productionTable"></div></section>
+<section id="transactions" class="page"><div class="toolbar"><div><h1>Riwayat Transaksi</h1><div class="muted">Pelunasan/angsuran sisa dilakukan dari halaman ini dan masuk pendapatan pada tanggal dibayar.</div></div></div><div class="card table-wrap" id="transactionTable"></div></section>
+<section id="reports" class="page"><div class="toolbar"><div><h1>Laporan Bisnis</h1><div class="muted">Pendapatan berbasis cash-in, bukan sekadar nilai invoice.</div></div></div><div class="grid g5" id="reportStats"></div><div class="card chart-wrap" style="margin-top:15px"><h3>Grafik Pendapatan Bulanan</h3><div id="reportChart"></div></div><div class="card table-wrap" style="margin-top:15px"><h3>Riwayat Pembayaran</h3><div id="paymentHistory"></div></div></section>
+<section id="settings" class="page"><h1>Pengaturan & Data</h1><div class="grid g2"><div class="card"><h3>Tampilan</h3><label>Mode Tampilan</label><select id="themeSelect" onchange="setTheme(this.value)"><option value="dark">Gelap</option><option value="light">Terang</option></select><p class="muted">Pilihan disimpan di browser.</p></div><div class="card"><h3>Backup & Data</h3><button class="success" onclick="backupData()">⬇ Backup JSON</button> <button onclick="document.getElementById('restoreFile').click()">⬆ Restore</button><input id="restoreFile" hidden type="file" accept=".json" onchange="restoreData(event)"> <button class="danger" onclick="wipeAll()">Reset Semua Data</button></div></div></section>
+</main>
+</div>
+
+<!-- MATERIAL MODAL -->
+<div class="modal" id="materialModal"><div class="box"><div class="modal-head"><h2 id="materialModalTitle">Bahan Baku</h2><button class="ghost" onclick="closeModal('materialModal')">✕</button></div><input id="materialId" type="hidden"><div class="row"><div><label>Nama Bahan *</label><input id="materialName"></div><div><label>Tipe *</label><select id="materialType" onchange="renderMaterialFields()"><option value="pcs">PCS</option><option value="area">Luas CM</option><option value="roll">Roll</option><option value="pcs_cm">PCS + CM</option></select></div><div><label>Keterangan</label><input id="materialNote"></div></div><div id="materialFields"></div><div class="actions" style="margin-top:16px"><button class="primary" onclick="saveMaterial()">Simpan Bahan</button><button onclick="closeModal('materialModal')">Batal</button></div></div></div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal" id="productModal"><div class="box"><div class="modal-head"><h2>Produk</h2><button class="ghost" onclick="closeModal('productModal')">✕</button></div><input id="productId" type="hidden"><div class="row"><div><label>Nama *</label><input id="productName"></div><div><label>Harga Jual *</label><input id="productPrice" type="number" min="0"></div><div><label>Gunakan Stok Produk?</label><select id="productTrack" onchange="toggleProductStock()"><option value="0">Tidak</option><option value="1">Ya</option></select></div></div><div id="productStockFields" class="row2"><div><label>Stok Produk (PCS)</label><input id="productStock" type="number" min="0"></div><div><label>Stok Minimum Produk</label><input id="productMinStock" type="number" min="0"></div></div><hr><h3>Resep Bahan Baku</h3><div class="notice">Kebutuhan selalu dihitung <b>per 1 produk</b>. Saat transaksi, mesin stok mengalikan kebutuhan ini dengan jumlah produk yang terjual.</div><div id="recipeList"></div><button onclick="addRecipeRow()">+ Tambah Bahan</button><div class="actions" style="margin-top:16px"><button class="primary" onclick="saveProduct()">Simpan Produk</button><button onclick="closeModal('productModal')">Batal</button></div></div></div>
+
+<!-- CUSTOMER MODAL -->
+<div class="modal" id="customerModal"><div class="box" style="max-width:650px"><div class="modal-head"><h2>Pelanggan</h2><button class="ghost" onclick="closeModal('customerModal')">✕</button></div><input id="customerId" type="hidden"><label>Nama *</label><input id="customerName"><label>WhatsApp</label><input id="customerPhone"><label>Alamat</label><textarea id="customerAddress"></textarea><div class="actions" style="margin-top:14px"><button class="primary" onclick="saveCustomer()">Simpan</button><button onclick="closeModal('customerModal')">Batal</button></div></div></div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal" id="paymentModal"><div class="box" style="max-width:620px"><div class="modal-head"><h2>Bayar Sisa / Angsuran</h2><button class="ghost" onclick="closeModal('paymentModal')">✕</button></div><input id="paymentTransactionId" type="hidden"><div id="paymentSummary" class="notice"></div><div class="row2"><div><label>Jumlah Pembayaran</label><input id="settlementAmount" type="number" min="0"></div><div><label>Metode</label><select id="settlementMethod"><option>Tunai</option><option>Transfer</option><option>QRIS</option></select></div></div><button class="success" style="margin-top:12px" onclick="payRemaining()">✓ Simpan Pembayaran</button></div></div>
+
+<!-- INVOICE MODAL -->
+<div class="modal" id="invoiceModal"><div class="box" style="max-width:950px"><div class="modal-head"><h2>Invoice 20 × 8 cm • A5 Landscape</h2><button class="ghost" onclick="closeModal('invoiceModal')">✕</button></div><div class="invoice-preview-wrap"><div id="invoicePrint" class="invoice-sheet"></div></div><div class="actions" style="margin-top:12px"><button class="primary" onclick="window.print()">🖨 Cetak Invoice</button><button onclick="closeModal('invoiceModal')">Tutup</button></div></div></div>
+
+<div class="money-runner" aria-hidden="true"><div class="runner"><span class="man">🏃</span><span class="dollar">💵</span><span class="dollar">💲</span><span class="dollar">💵</span></div></div>
+
+<script>
+"use strict";
+/* ============================================================
+   RATUPRINTING POS v1.3 — MODULAR APPLICATION CORE
+   ============================================================ */
+const CONFIG={storageKey:"ratuprinting_pos_v1",themeKey:"ratuprinting_theme",version:"1.3.6"};
+
+/* ---------- Utilities ---------- */
+const $=id=>document.getElementById(id);
+const N=v=>Number(v||0);
+const money=v=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(N(v));
+const uid=p=>`${p}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,7)}`;
+const byId=(arr,id)=>arr.find(x=>x.id===id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const nowISO=()=>new Date().toISOString();
+const dateText=d=>new Intl.DateTimeFormat("id-ID",{dateStyle:"medium",timeStyle:"short"}).format(new Date(d));
+function clamp(v,min,max){return Math.min(max,Math.max(min,v));}
+
+/* Database must load AFTER utility helpers are initialized.
+   Otherwise migrateDB() calls N() while N is still in the TDZ,
+   stopping all JavaScript before navigation handlers are registered. */
+let DB=loadDB();
+let CART=[];
+
+/* ============================================================
+   1. DATABASE & MIGRATION ENGINE
+   Keeps data from v1.0 / v1.1 compatible.
+   ============================================================ */
+function baseDB(){return{products:[],materials:[],customers:[],transactions:[],meta:{invoiceSeq:0}};}
+function loadDB(){
+  let data=baseDB();
+  try{const raw=localStorage.getItem(CONFIG.storageKey);if(raw)data={...data,...JSON.parse(raw)}}catch(e){console.error("Load DB",e)}
+  data.products=Array.isArray(data.products)?data.products:[];
+  data.materials=Array.isArray(data.materials)?data.materials:[];
+  data.customers=Array.isArray(data.customers)?data.customers:[];
+  data.transactions=Array.isArray(data.transactions)?data.transactions:[];
+  data.meta=(data.meta&&typeof data.meta==="object")?data.meta:{invoiceSeq:0};
+  migrateDB(data);return data;
+}
+function migrateDB(data){
+  data.meta=data.meta||{};data.meta.invoiceSeq=Math.max(N(data.meta.invoiceSeq),data.transactions.length);
+  data.materials.forEach(m=>{
+    m.stock=m.stock||{};m.minStock=m.minStock||{};
+    if(m.min!==undefined){
+      if(m.type==="pcs")m.minStock.pcs=N(m.min);
+      if(m.type==="roll")m.minStock.length=N(m.min);
+      if(m.type==="area"){m.minStock.area=N(m.min);m.minStock.width=N(m.minStock.width);m.minStock.height=N(m.minStock.height)}
+      if(m.type==="pcs_cm"){m.minStock.pcs=N(m.min);m.minStock.area=N(m.min)}
+    }
+    if((m.type==="area"||m.type==="pcs_cm")&&N(m.stock.area)<=0&&N(m.stock.width)>0&&N(m.stock.height)>0)m.stock.area=N(m.stock.width)*N(m.stock.height);
+  });
+  data.products.forEach(p=>{p.recipe=Array.isArray(p.recipe)?p.recipe:[];p.track=!!(p.track??p.trackStock);p.minStock=N(p.minStock)});
+  data.transactions.forEach(t=>{
+    t.invoice=t.invoice||t.invoiceNumber||`RP-${Date.now()}`;
+    t.date=t.date||nowISO();t.total=N(t.total);t.paid=N(t.paid);t.remaining=Math.max(0,N(t.remaining??(t.total-t.paid)));
+    t.status=t.remaining<=0?"Lunas":t.paid>0?"DP":"Belum Bayar";
+    t.production=t.production||t.productionStatus||"Menunggu Pembayaran";
+    t.customerSnapshot=t.customerSnapshot||null;t.voided=!!t.voided;
+    if(!Array.isArray(t.paymentEvents)){
+      t.paymentEvents=[];
+      if(t.paid>0)t.paymentEvents.push({id:uid("pay"),date:t.date,amount:t.paid,method:t.payment||t.paymentMethod||"Tidak dicatat",note:"Migrasi pembayaran awal"});
+    }
+  });
+}
+function saveDB(){localStorage.setItem(CONFIG.storageKey,JSON.stringify(DB));}
+
+/* ============================================================
+   2. NAV / MODAL ENGINE
+   ============================================================ */
+$("nav")?.addEventListener("click",e=>{
+  const b=e.target.closest("[data-page]");
+  if(!b)return;
+  const target=$(b.dataset.page);
+  if(!target){console.error("Halaman menu tidak ditemukan:",b.dataset.page);return;}
+  document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  target.classList.add("active");
+  try{renderAll();}catch(err){console.error("Render halaman gagal:",err);}
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+function openModal(id){$(id).classList.add("show")}function closeModal(id){$(id).classList.remove("show")}
+document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)closeModal(m.id)}));
+
+/* ============================================================
+   3. MATERIAL ENGINE
+   For area / PCS+CM: width, height and area are all real stock fields.
+   ============================================================ */
+function materialLabel(type){return({pcs:"PCS",area:"CM (Lebar × Tinggi)",roll:"ROLL",pcs_cm:"PCS + CM"})[type]||type;}
+function openMaterial(id=null){
+  const m=id?byId(DB.materials,id):null;
+  $("materialId").value=id||"";$("materialModalTitle").textContent=m?"Edit Bahan Baku":"Tambah Bahan Baku";$("materialName").value=m?.name||"";$("materialType").value=m?.type||"pcs";$("materialNote").value=m?.note||"";renderMaterialFields(m);openModal("materialModal");
+}
+function renderMaterialFields(existing=null){
+  const type=$("materialType").value,id=$("materialId").value,m=existing||(id?byId(DB.materials,id):null),s=m?.stock||{},mn=m?.minStock||{};let h="";
+  if(type==="pcs")h=`<div class="row2"><div><label>Stok PCS</label><input id="mPcs" type="number" min="0" value="${N(s.pcs)}"></div><div><label>Stok Minimal PCS</label><input id="mMinPcs" type="number" min="0" value="${N(mn.pcs)}"></div></div>`;
+  if(type==="area")h=`<div class="row"><div><label>Lebar Stok (cm)</label><input id="mWidth" type="number" min="0" value="${N(s.width)}" oninput="syncMaterialArea()"></div><div><label>Tinggi Stok (cm)</label><input id="mHeight" type="number" min="0" value="${N(s.height)}" oninput="syncMaterialArea()"></div><div><label>Total Luas Otomatis (cm²)</label><input id="mArea" readonly value="${N(s.area)}"></div></div><div class="row"><div><label>Lebar Minimum (cm)</label><input id="mMinWidth" type="number" min="0" value="${N(mn.width)}"></div><div><label>Tinggi Minimum (cm)</label><input id="mMinHeight" type="number" min="0" value="${N(mn.height)}"></div><div><label>Luas Minimum (cm²)</label><input id="mMinArea" type="number" min="0" value="${N(mn.area)}"></div></div>`;
+  if(type==="roll")h=`<div class="row"><div><label>Lebar Roll (cm)</label><input id="mRollWidth" type="number" min="0" value="${N(s.width??s.rollWidth)}"></div><div><label>Panjang Tersisa (cm)</label><input id="mRollLength" type="number" min="0" value="${N(s.length??s.rollLength)}"></div><div><label>Panjang Minimum (cm)</label><input id="mMinLength" type="number" min="0" value="${N(mn.length)}"></div></div>`;
+  if(type==="pcs_cm")h=`<div class="row"><div><label>Stok PCS</label><input id="mPcs" type="number" min="0" value="${N(s.pcs)}"></div><div><label>Lebar Stok (cm)</label><input id="mWidth" type="number" min="0" value="${N(s.width)}" oninput="syncMaterialArea()"></div><div><label>Tinggi Stok (cm)</label><input id="mHeight" type="number" min="0" value="${N(s.height)}" oninput="syncMaterialArea()"></div></div><div class="row"><div><label>Total Luas Otomatis (cm²)</label><input id="mArea" readonly value="${N(s.area)}"></div><div><label>Minimum PCS</label><input id="mMinPcs" type="number" min="0" value="${N(mn.pcs)}"></div><div><label>Minimum Luas (cm²)</label><input id="mMinArea" type="number" min="0" value="${N(mn.area)}"></div></div><div class="row2"><div><label>Lebar Minimum (cm)</label><input id="mMinWidth" type="number" min="0" value="${N(mn.width)}"></div><div><label>Tinggi Minimum (cm)</label><input id="mMinHeight" type="number" min="0" value="${N(mn.height)}"></div></div>`;
+  $("materialFields").innerHTML=h;if(type==="area"||type==="pcs_cm")syncMaterialArea();
+}
+function syncMaterialArea(){const a=$("mArea");if(a)a.value=(N($("mWidth")?.value)*N($("mHeight")?.value)).toFixed(2).replace(/\.00$/,"");}
+function saveMaterial(){
+  const id=$("materialId").value||uid("mat"),name=$("materialName").value.trim(),type=$("materialType").value;if(!name)return alert("Nama bahan wajib diisi.");
+  let stock={},minStock={};
+  if(type==="pcs"){stock={pcs:N($("mPcs").value)};minStock={pcs:N($("mMinPcs").value)}}
+  if(type==="area"){stock={width:N($("mWidth").value),height:N($("mHeight").value)};stock.area=stock.width*stock.height;minStock={width:N($("mMinWidth").value),height:N($("mMinHeight").value),area:N($("mMinArea").value)}}
+  if(type==="roll"){stock={width:N($("mRollWidth").value),length:N($("mRollLength").value)};minStock={length:N($("mMinLength").value)}}
+  if(type==="pcs_cm"){stock={pcs:N($("mPcs").value),width:N($("mWidth").value),height:N($("mHeight").value)};stock.area=stock.width*stock.height;minStock={pcs:N($("mMinPcs").value),width:N($("mMinWidth").value),height:N($("mMinHeight").value),area:N($("mMinArea").value)}}
+  const obj={id,name,type,note:$("materialNote").value.trim(),stock,minStock};const i=DB.materials.findIndex(x=>x.id===id);i<0?DB.materials.push(obj):DB.materials[i]=obj;saveDB();closeModal("materialModal");renderAll();
+}
+function deleteMaterial(id){const m=byId(DB.materials,id);if(!m)return;const used=DB.products.filter(p=>(p.recipe||[]).some(r=>r.materialId===id));if(used.length&&!confirm(`Bahan "${m.name}" dipakai ${used.length} produk. Produk terkait akan ditandai RESEP TIDAK LENGKAP dan tidak bisa dijual sampai diperbaiki. Lanjutkan?`))return;used.forEach(p=>{p.recipeBroken=true;p.brokenMaterials=[...(p.brokenMaterials||[]),{id:m.id,name:m.name}]});DB.materials=DB.materials.filter(x=>x.id!==id);saveDB();renderAll()}
+function stockText(m){const s=m.stock||{};if(m.type==="pcs")return `${N(s.pcs)} PCS`;if(m.type==="roll")return `${N(s.width)} × ${N(s.length)} cm`;if(m.type==="area")return `${N(s.width)} × ${N(s.height)} cm = ${N(s.area).toLocaleString("id-ID")} cm²`;return `${N(s.pcs)} PCS + ${N(s.width)} × ${N(s.height)} cm = ${N(s.area).toLocaleString("id-ID")} cm²`;}
+function stockWarnings(m){
+  const s=m.stock||{},mn=m.minStock||{},warn=[];const near=(v,min)=>N(min)>0&&N(v)<=N(min)*1.20;
+  if((m.type==="pcs"||m.type==="pcs_cm")&&near(s.pcs,mn.pcs))warn.push(`PCS ${N(s.pcs)} ≤ batas ${N(mn.pcs)}`);
+  if((m.type==="area"||m.type==="pcs_cm")&&near(s.width,mn.width))warn.push(`Lebar ${N(s.width)} cm mendekati minimum ${N(mn.width)} cm`);
+  if((m.type==="area"||m.type==="pcs_cm")&&near(s.height,mn.height))warn.push(`Tinggi ${N(s.height)} cm mendekati minimum ${N(mn.height)} cm`);
+  if((m.type==="area"||m.type==="pcs_cm")&&near(s.area,mn.area))warn.push(`Luas ${N(s.area)} cm² mendekati minimum ${N(mn.area)} cm²`);
+  if(m.type==="roll"&&near(s.length,mn.length))warn.push(`Panjang roll ${N(s.length)} cm mendekati minimum ${N(mn.length)} cm`);
+  return warn;
+}
+function renderMaterials(){const el=$("materialTable");if(!DB.materials.length){el.innerHTML='<div class="empty">Belum ada bahan baku.</div>';return}el.innerHTML=`<table><thead><tr><th>Nama</th><th>Tipe</th><th>Stok Tersisa</th><th>Status</th><th>Aksi</th></tr></thead><tbody>${DB.materials.map(m=>{const w=stockWarnings(m);return`<tr class="${w.length?"low-stock-row":""}"><td><b>${esc(m.name)}</b><div class="muted">${esc(m.note||"")}</div></td><td><span class="badge">${materialLabel(m.type)}</span></td><td>${stockText(m)}</td><td>${w.length?`<span class="badge bad">⚠ STOK MENIPIS</span><div class="muted">${w.map(esc).join("<br>")}</div>`:'<span class="badge ok">AMAN</span>'}</td><td><div class="actions"><button onclick="openMaterial('${m.id}')">Edit</button><button class="danger" onclick="deleteMaterial('${m.id}')">Hapus</button></div></td></tr>`}).join("")}</tbody></table>`;}
+
+/* ============================================================
+   4. PRODUCT & RECIPE ENGINE
+   ============================================================ */
+function toggleProductStock(){$("productStockFields").style.display=$("productTrack").value==="1"?"grid":"none";}
+function materialOptions(selected=""){return `<option value="">-- Pilih Bahan --</option>`+DB.materials.map(m=>`<option value="${m.id}" ${m.id===selected?"selected":""}>${esc(m.name)} (${materialLabel(m.type)})</option>`).join("")}
+function openProduct(id=null){const p=id?byId(DB.products,id):null;$("productId").value=id||"";$("productName").value=p?.name||"";$("productPrice").value=N(p?.price);$("productTrack").value=p?.track?"1":"0";$("productStock").value=N(p?.stock);$("productMinStock").value=N(p?.minStock);toggleProductStock();$("recipeList").innerHTML="";(p?.recipe||[]).forEach(r=>addRecipeRow(r));openModal("productModal")}
+function addRecipeRow(recipe=null){const d=document.createElement("div");d.className="recipe";d.innerHTML=`<div class="row2"><div><label>Bahan</label><select class="rMaterial" onchange="renderRecipeFields(this)">${materialOptions(recipe?.materialId||"")}</select></div><div style="align-self:end"><button class="danger" onclick="this.closest('.recipe').remove()">Hapus dari Resep</button></div></div><div class="rFields"></div>`;$("recipeList").appendChild(d);renderRecipeFields(d.querySelector(".rMaterial"),recipe)}
+function renderRecipeFields(select,recipe=null){const m=byId(DB.materials,select.value),target=select.closest(".recipe").querySelector(".rFields"),r=recipe||{};if(!m){target.innerHTML='<div class="muted">Pilih bahan.</div>';return}if(m.type==="pcs")target.innerHTML=`<label>Kebutuhan PCS untuk 1 produk</label><input class="rPcs" type="number" min="0" value="${N(r.pcs)}">`;if(m.type==="area")target.innerHTML=`<div class="row2"><div><label>Lebar untuk 1 produk (cm)</label><input class="rW" type="number" min="0" value="${N(r.w??r.width)}"></div><div><label>Tinggi untuk 1 produk (cm)</label><input class="rH" type="number" min="0" value="${N(r.h??r.height)}"></div></div>`;if(m.type==="roll")target.innerHTML=`<label>Panjang roll untuk 1 produk (cm)</label><input class="rLen" type="number" min="0" value="${N(r.len??r.rollLength)}">`;if(m.type==="pcs_cm")target.innerHTML=`<div class="row"><div><label>PCS untuk 1 produk</label><input class="rPcs" type="number" min="0" value="${N(r.pcs)}"></div><div><label>Lebar untuk 1 produk (cm)</label><input class="rW" type="number" min="0" value="${N(r.w??r.width)}"></div><div><label>Tinggi untuk 1 produk (cm)</label><input class="rH" type="number" min="0" value="${N(r.h??r.height)}"></div></div>`;}
+function collectRecipe(){return[...document.querySelectorAll("#recipeList .recipe")].map(d=>({materialId:d.querySelector(".rMaterial").value,pcs:N(d.querySelector(".rPcs")?.value),w:N(d.querySelector(".rW")?.value),h:N(d.querySelector(".rH")?.value),len:N(d.querySelector(".rLen")?.value)})).filter(r=>r.materialId)}
+function saveProduct(){const id=$("productId").value||uid("prd"),name=$("productName").value.trim();if(!name)return alert("Nama produk wajib diisi.");const o={id,name,price:N($("productPrice").value),recipeBroken:false,brokenMaterials:[],track:$("productTrack").value==="1",stock:N($("productStock").value),minStock:N($("productMinStock").value),recipe:collectRecipe()};const i=DB.products.findIndex(x=>x.id===id);i<0?DB.products.push(o):DB.products[i]=o;saveDB();closeModal("productModal");renderAll()}
+function deleteProduct(id){const p=byId(DB.products,id);if(!p)return;if(!confirm(`Hapus produk "${p.name}"? Riwayat transaksi lama tetap tersimpan.`))return;DB.products=DB.products.filter(x=>x.id!==id);CART=CART.filter(x=>x.productId!==id);saveDB();renderAll()}
+function recipeText(p){return(p.recipe||[]).map(r=>{const m=byId(DB.materials,r.materialId);if(!m)return"Bahan hilang";if(m.type==="pcs")return `${m.name}: ${N(r.pcs)} PCS/produk`;if(m.type==="roll")return `${m.name}: ${N(r.len)} cm/produk`;if(m.type==="area")return `${m.name}: ${N(r.w)}×${N(r.h)} cm/produk`;return `${m.name}: ${N(r.pcs)} PCS + ${N(r.w)}×${N(r.h)} cm/produk`}).join("<br>")||"-"}
+function renderProducts(){const el=$("productTable");if(!DB.products.length){el.innerHTML='<div class="empty">Belum ada produk.</div>';return}el.innerHTML=`<table><thead><tr><th>Produk</th><th>Harga</th><th>Stok Produk</th><th>Resep</th><th>Aksi</th></tr></thead><tbody>${DB.products.map(p=>`<tr class="${p.track&&N(p.minStock)>0&&N(p.stock)<=N(p.minStock)*1.2?"low-stock-row":""}"><td><b>${esc(p.name)}</b>${p.recipeBroken?` <span class="badge bad">RESEP TIDAK LENGKAP</span>`:""}</td><td>${money(p.price)}</td><td>${p.track?`${N(p.stock)} PCS`:'Tidak dihitung'}</td><td>${recipeText(p)}</td><td><div class="actions"><button onclick="openProduct('${p.id}')">Edit</button><button class="danger" onclick="deleteProduct('${p.id}')">Hapus</button></div></td></tr>`).join("")}</tbody></table>`}
+
+/* ============================================================
+   5. CUSTOMER ENGINE
+   ============================================================ */
+function openCustomer(id=null){const c=id?byId(DB.customers,id):null;$("customerId").value=id||"";$("customerName").value=c?.name||"";$("customerPhone").value=c?.phone||"";$("customerAddress").value=c?.address||"";openModal("customerModal")}
+function saveCustomer(){const id=$("customerId").value||uid("cus"),name=$("customerName").value.trim();if(!name)return alert("Nama pelanggan wajib diisi.");const o={id,name,phone:$("customerPhone").value.trim(),address:$("customerAddress").value.trim()};const i=DB.customers.findIndex(x=>x.id===id);i<0?DB.customers.push(o):DB.customers[i]=o;saveDB();closeModal("customerModal");renderAll()}
+function deleteCustomer(id){if(!confirm("Hapus pelanggan? Riwayat transaksi tetap tersimpan."))return;DB.customers=DB.customers.filter(x=>x.id!==id);saveDB();renderAll()}
+function renderCustomers(){const el=$("customerTable");if(!DB.customers.length){el.innerHTML='<div class="empty">Belum ada pelanggan.</div>';return}el.innerHTML=`<table><thead><tr><th>Nama</th><th>WhatsApp</th><th>Alamat</th><th>Aksi</th></tr></thead><tbody>${DB.customers.map(c=>`<tr><td><b>${esc(c.name)}</b></td><td>${esc(c.phone||"-")}</td><td>${esc(c.address||"-")}</td><td><div class="actions"><button onclick="openCustomer('${c.id}')">Edit</button><button class="danger" onclick="deleteCustomer('${c.id}')">Hapus</button></div></td></tr>`).join("")}</tbody></table>`}
+
+/* ============================================================
+   6. STOCK ENGINE — BUG FIX CORE
+   IMPORTANT: No stock is mutated outside applyStockPlan().
+
+   PCS + CM example:
+   recipe = 2 PCS + 10×5 cm per product, sold qty = 3
+   => PCS use 6, width use 30 cm, height use 15 cm.
+   All values are multiplied by qty BEFORE mutation.
+   ============================================================ */
+function buildStockPlan(cart){
+  const productNeeds={};const materialNeeds={};
+  for(const line of cart){
+    if(line.type==="custom")continue;
+    const p=byId(DB.products,line.productId);if(!p)throw new Error("Produk pada keranjang tidak ditemukan.");if(p.recipeBroken)throw new Error(`Produk ${p.name} tidak dapat dijual karena resep belum lengkap.`);const qty=N(line.qty);if(qty<=0)throw new Error("Jumlah produk tidak valid.");
+    if(p.track)productNeeds[p.id]=(productNeeds[p.id]||0)+qty;
+    for(const r of(p.recipe||[])){
+      const m=byId(DB.materials,r.materialId);if(!m)throw new Error(`Bahan pada resep ${p.name} tidak ditemukan.`);
+      const z=materialNeeds[m.id]||(materialNeeds[m.id]={materialId:m.id,type:m.type,pcs:0,width:0,height:0,area:0,length:0});
+      if(m.type==="pcs"){z.pcs+=N(r.pcs)*qty;}
+      if(m.type==="area"){z.width+=N(r.w)*qty;z.height+=N(r.h)*qty;z.area+=N(r.w)*N(r.h)*qty;}
+      if(m.type==="roll"){z.length+=N(r.len)*qty;}
+      if(m.type==="pcs_cm"){z.pcs+=N(r.pcs)*qty;z.width+=N(r.w)*qty;z.height+=N(r.h)*qty;z.area+=N(r.w)*N(r.h)*qty;}
+    }
+  }
+  return{productNeeds,materialNeeds};
+}
+function validateStockPlan(plan){const errors=[];
+  Object.entries(plan.productNeeds).forEach(([id,need])=>{const p=byId(DB.products,id);if(!p||N(p.stock)<N(need))errors.push(`Stok produk ${p?.name||id} tidak cukup. Butuh ${need}, tersedia ${N(p?.stock)}.`)});
+  Object.values(plan.materialNeeds).forEach(n=>{const m=byId(DB.materials,n.materialId);if(!m){errors.push("Bahan baku hilang.");return}const s=m.stock||{};
+    if((m.type==="pcs"||m.type==="pcs_cm")&&N(s.pcs)<N(n.pcs))errors.push(`${m.name}: PCS tidak cukup. Butuh ${n.pcs}, tersedia ${N(s.pcs)}.`);
+    if((m.type==="area"||m.type==="pcs_cm")&&N(s.width)<N(n.width))errors.push(`${m.name}: lebar stok tidak cukup. Butuh total ${n.width} cm, tersedia ${N(s.width)} cm.`);
+    if((m.type==="area"||m.type==="pcs_cm")&&N(s.height)<N(n.height))errors.push(`${m.name}: tinggi stok tidak cukup. Butuh total ${n.height} cm, tersedia ${N(s.height)} cm.`);
+    if((m.type==="area"||m.type==="pcs_cm")&&N(s.area)<N(n.area))errors.push(`${m.name}: luas stok tidak cukup. Butuh ${n.area} cm², tersedia ${N(s.area)} cm².`);
+    if(m.type==="roll"&&N(s.length)<N(n.length))errors.push(`${m.name}: panjang roll tidak cukup. Butuh ${n.length} cm, tersedia ${N(s.length)} cm.`);
+  });return errors;
+}
+function applyStockPlan(plan){
+  Object.entries(plan.productNeeds).forEach(([id,need])=>{const p=byId(DB.products,id);p.stock=Math.max(0,N(p.stock)-N(need));});
+  Object.values(plan.materialNeeds).forEach(n=>{const m=byId(DB.materials,n.materialId),s=m.stock;
+    if(m.type==="pcs")s.pcs=Math.max(0,N(s.pcs)-N(n.pcs));
+    if(m.type==="roll")s.length=Math.max(0,N(s.length)-N(n.length));
+    if(m.type==="area"){s.width=Math.max(0,N(s.width)-N(n.width));s.height=Math.max(0,N(s.height)-N(n.height));s.area=s.width*s.height;}
+    if(m.type==="pcs_cm"){s.pcs=Math.max(0,N(s.pcs)-N(n.pcs));s.width=Math.max(0,N(s.width)-N(n.width));s.height=Math.max(0,N(s.height)-N(n.height));s.area=s.width*s.height;}
+  });
+}
+
+/* ============================================================
+   7. CART & CHECKOUT ENGINE
+   ============================================================ */
+function addCart(){
+  const p=byId(DB.products,$("cashProduct").value),q=N($("cashQty").value);
+  const customName=$("cashProductCustomName").value.trim();
+  if(!p||q<1)return alert("Pilih produk dan jumlah yang valid.");
+  const displayName=customName||p.name;
+  const x=CART.find(a=>a.type!=="custom"&&a.productId===p.id&&(a.customName||a.productName||p.name)===displayName);
+  if(x)x.qty+=q;
+  else CART.push({id:uid("cart"),type:"product",productId:p.id,qty:q,customName:customName||""});
+  $("cashProductCustomName").value="";
+  renderCart();
+}
+function formatMeterValue(cm){
+  return (N(cm)/100).toLocaleString("id-ID",{maximumFractionDigits:4});
+}
+function formatPlainPrice(value){
+  return N(value).toLocaleString("id-ID",{maximumFractionDigits:0});
+}
+function parseIDPrice(value){
+  return Number(String(value??"").replace(/[^0-9,-]/g,"").replace(/[.,]/g,""))||0;
+}
+function formatCustomCalculatedInput(){
+  const el=$("customCalculatedPrice");
+  if(!el.value.trim())return;
+  el.value=formatPlainPrice(parseIDPrice(el.value));
+}
+function updateCustomPrice(){
+  const w=N($("customWidth").value),h=N($("customHeight").value),base=N($("customBasePrice").value);
+  if(w<=0||h<=0||base<0){$("customFormula").textContent="Masukkan lebar, tinggi, dan harga untuk menghitung otomatis.";$("customCalculatedPrice").value="";return}
+  const wm=w/100,hm=h/100,result=wm*hm*base;
+  const fw=formatMeterValue(w),fh=formatMeterValue(h),fp=formatPlainPrice(base);
+  $("customFormula").innerHTML=`Rumus: <b>${fw} × ${fh} × ${fp} = ${money(result)}</b>`;
+  $("customCalculatedPrice").value=formatPlainPrice(Math.round(result));
+}
+function addCustomCart(){
+  const name=$("customName").value.trim()||"Custom Ukuran";
+  const width=N($("customWidth").value),height=N($("customHeight").value),basePrice=N($("customBasePrice").value),unitPrice=parseIDPrice($("customCalculatedPrice").value),qty=Math.max(1,N($("customQty").value));
+  const showSizeInInvoice=$("customShowSizeInvoice").checked;
+  if(width<=0||height<=0)return alert("Isi lebar dan tinggi custom dengan benar.");
+  if(basePrice<0||unitPrice<0)return alert("Harga custom tidak valid.");
+  CART.push({id:uid("custom"),type:"custom",name,qty,width,height,basePrice,unitPrice,showSizeInInvoice,formula:`${formatMeterValue(width)} × ${formatMeterValue(height)} × ${formatPlainPrice(basePrice)}`});
+  ["customName","customWidth","customHeight","customBasePrice","customCalculatedPrice"].forEach(id=>$(id).value="");
+  $("customShowSizeInvoice").checked=true;
+  $("customQty").value=1;$("customFormula").textContent="Masukkan lebar, tinggi, dan harga untuk menghitung otomatis.";
+  renderCart();
+}
+function clearCart(){CART=[];$("discount").value=0;$("paidNow").value=0;renderCart()}
+function removeCart(id){CART=CART.filter(x=>x.id!==id&&x.productId!==id);renderCart()}
+function setCartQty(id,q){const x=CART.find(a=>a.id===id||a.productId===id);if(x)x.qty=Math.max(1,N(q));renderCart()}
+function lineUnitPrice(x){if(x.type==="custom")return N(x.unitPrice);const p=byId(DB.products,x.productId);return p?N(p.price):0}
+function cartSubtotal(){return CART.reduce((sum,x)=>sum+lineUnitPrice(x)*N(x.qty),0)}
+function renderCart(){
+  const el=$("cartList");
+  el.innerHTML=CART.length?CART.map(x=>{
+    const custom=x.type==="custom";
+    const name=custom?x.name:(x.customName||byId(DB.products,x.productId)?.name||"Produk dihapus");
+    const unit=lineUnitPrice(x),id=x.id||x.productId;
+    const detail=custom?`<div class="muted" style="margin:4px 0">Ukuran: ${N(x.width)} × ${N(x.height)} cm<br>Harga dasar: ${money(x.basePrice)} / m²<br>Rumus: ${esc(x.formula||"")}</div>`:"";
+    return `<div class="cart"><b>${esc(name)}</b>${detail}<div class="row2"><div><label>Jumlah</label><input type="number" min="1" value="${N(x.qty)}" onchange="setCartQty('${id}',this.value)"></div><div><label>Subtotal</label><div style="padding:10px 0;font-weight:900">${money(unit*N(x.qty))}</div></div></div><div class="muted">Harga per item: ${money(unit)}</div><button class="danger" onclick="removeCart('${id}')">Hapus</button></div>`;
+  }).join(""):'<div class="empty">Keranjang kosong.</div>';
+  const sub=cartSubtotal(),total=Math.max(0,sub-N($("discount").value)),paid=Math.min(total,N($("paidNow").value));$("cartTotal").textContent=money(total);$("cartInfo").textContent=`Subtotal ${money(sub)} • Dibayar ${money(paid)} • Sisa ${money(total-paid)}`;
+}
+function checkout(){
+  if(!CART.length)return alert("Keranjang kosong.");
+  let plan;try{plan=buildStockPlan(CART.filter(x=>x.type!=="custom"))}catch(e){return alert(e.message)}
+  const errors=validateStockPlan(plan);if(errors.length)return alert("TRANSAKSI DITOLAK:\n\n"+errors.join("\n"));
+  let customerId=$("cashCustomer").value;const quick=$("quickCustomer").value.trim();if(!customerId&&quick){const c={id:uid("cus"),name:quick,phone:"",address:""};DB.customers.push(c);customerId=c.id}
+  const sub=cartSubtotal(),total=Math.max(0,sub-N($("discount").value)),paid=Math.min(total,N($("paidNow").value)),date=nowISO();
+  const selectedCustomer=customerId?byId(DB.customers,customerId):null;const customerSnapshot=selectedCustomer?{id:selectedCustomer.id,name:selectedCustomer.name,phone:selectedCustomer.phone||"",address:selectedCustomer.address||""}:quick?{id:null,name:quick,phone:"",address:""}:null;DB.meta=DB.meta||{};DB.meta.invoiceSeq=N(DB.meta.invoiceSeq)+1;const invoice=`RP-${new Date().toISOString().slice(0,10).replaceAll("-","")}-${String(DB.meta.invoiceSeq).padStart(6,"0")}`;
+  const items=CART.map(x=>{
+    if(x.type==="custom")return{type:"custom",productId:null,name:x.name,price:N(x.unitPrice),qty:N(x.qty),width:N(x.width),height:N(x.height),basePrice:N(x.basePrice),showSizeInInvoice:x.showSizeInInvoice!==false,formula:x.formula||""};
+    const p=byId(DB.products,x.productId);return{type:"product",productId:p.id,name:(x.customName||p.name),originalName:p.name,price:N(p.price),qty:N(x.qty)};
+  });
+  const t={id:uid("trx"),invoice,date,customerId,customerSnapshot,items,subtotal:sub,discount:N($("discount").value),total,paid,remaining:total-paid,status:paid>=total?"Lunas":paid>0?"DP":"Belum Bayar",production:$("productionStatus").value,payment:$("paymentMethod").value,paymentEvents:paid>0?[{id:uid("pay"),date,amount:paid,method:$("paymentMethod").value,note:"Pembayaran saat transaksi"}]:[],stockPlan:JSON.parse(JSON.stringify(plan))};
+  applyStockPlan(plan);DB.transactions.unshift(t);saveDB();CART=[];$("quickCustomer").value="";$("discount").value=0;$("paidNow").value=0;renderAll();showInvoice(t.id);alert("Transaksi berhasil. Produk custom ikut masuk ke keranjang, riwayat, dan invoice.");
+}
+
+/* ============================================================
+   8. PAYMENT / RECEIVABLE ENGINE
+   A payment becomes revenue on the date the payment is recorded.
+   ============================================================ */
+function openPayment(id){const t=byId(DB.transactions,id);if(!t||N(t.remaining)<=0)return;$("paymentTransactionId").value=id;$("settlementAmount").value=N(t.remaining);$("paymentSummary").innerHTML=`Invoice <b>${esc(t.invoice)}</b><br>Total ${money(t.total)} • Sudah dibayar ${money(t.paid)} • <b>Sisa ${money(t.remaining)}</b>`;openModal("paymentModal")}
+function payRemaining(){const t=byId(DB.transactions,$("paymentTransactionId").value);if(!t)return;const amount=N($("settlementAmount").value);if(amount<=0)return alert("Jumlah pembayaran harus lebih dari 0.");if(amount>N(t.remaining))return alert("Pembayaran tidak boleh melebihi sisa tagihan.");const e={id:uid("pay"),date:nowISO(),amount,method:$("settlementMethod").value,note:"Pembayaran sisa/angsuran"};t.paymentEvents=t.paymentEvents||[];t.paymentEvents.push(e);t.paid=N(t.paid)+amount;t.remaining=Math.max(0,N(t.total)-N(t.paid));t.status=t.remaining<=0?"Lunas":"DP";saveDB();closeModal("paymentModal");renderAll();alert(`Pembayaran ${money(amount)} berhasil. Uang ini masuk ke pendapatan pada tanggal hari ini.`)}
+function paymentEvents(){return DB.transactions.filter(t=>!t.voided).flatMap(t=>(t.paymentEvents||[]).map(p=>({...p,transactionId:t.id,invoice:t.invoice}))).sort((a,b)=>new Date(b.date)-new Date(a.date))}
+function transactionCustomer(t){return t.customerSnapshot||byId(DB.customers,t.customerId)||{name:"Umum",phone:"",address:""};}
+
+/* ============================================================
+   9. PRODUCTION ENGINE
+   ============================================================ */
+const PROD_STATES=["Menunggu Pembayaran","Menunggu Desain","Sedang Desain","Menunggu Persetujuan","Sedang Dicetak","Finishing","Selesai","Sudah Diambil"];
+function setProduction(id,value){const t=byId(DB.transactions,id);if(!t)return;if(value==="Sudah Diambil"&&N(t.remaining)>0){alert(`Pesanan belum boleh diambil. Masih ada sisa pembayaran ${money(t.remaining)}.`);renderProduction();return}t.production=value;saveDB();renderAll()}
+function renderProduction(){const active=DB.transactions.filter(t=>!['Sudah Diambil'].includes(t.production));const el=$("productionTable");if(!active.length){el.innerHTML='<div class="empty">Tidak ada pekerjaan produksi.</div>';return}el.innerHTML=active.map(t=>{const c=transactionCustomer(t);return`<div class="cart"><div class="row"><div><b>${esc(t.invoice)}</b><div class="muted">${esc(c?.name||"Umum")}</div></div><div><span class="badge ${t.remaining>0?"bad":"ok"}">${t.remaining>0?`Sisa ${money(t.remaining)}`:"LUNAS"}</span></div><div><select onchange="setProduction('${t.id}',this.value)">${PROD_STATES.map(s=>`<option ${s===t.production?"selected":""}>${s}</option>`).join("")}</select></div></div></div>`}).join("")}
+
+/* ============================================================
+   10. TRANSACTION HISTORY ENGINE
+   Deleting history does NOT restore stock automatically, because
+   sold physical stock should not silently return to inventory.
+   ============================================================ */
+function deleteTransaction(id){const t=byId(DB.transactions,id);if(!t)return;if(N(t.paid)>0)return alert("Transaksi yang sudah memiliki pembayaran tidak boleh dihapus karena dapat merusak laporan pendapatan.");if(!confirm(`Hapus riwayat ${t.invoice}?`))return;DB.transactions=DB.transactions.filter(x=>x.id!==id);saveDB();renderAll()}
+function voidTransaction(id){const t=byId(DB.transactions,id);if(!t||t.voided)return;if(N(t.paid)>0)return alert("Transaksi yang sudah menerima pembayaran tidak dapat dibatalkan otomatis. Refund harus dicatat terlebih dahulu.");if(!confirm(`Batalkan ${t.invoice} dan kembalikan stok?`))return;const plan=t.stockPlan||{productNeeds:{},materialNeeds:{}};Object.entries(plan.productNeeds||{}).forEach(([pid,n])=>{const p=byId(DB.products,pid);if(p)p.stock=N(p.stock)+N(n)});Object.values(plan.materialNeeds||{}).forEach(n=>{const m=byId(DB.materials,n.materialId);if(!m)return;const st=m.stock||{};if(m.type==="pcs")st.pcs=N(st.pcs)+N(n.pcs);if(m.type==="roll")st.length=N(st.length)+N(n.length);if(m.type==="area"||m.type==="pcs_cm"){st.width=N(st.width)+N(n.width);st.height=N(st.height)+N(n.height);st.area=N(st.width)*N(st.height)}if(m.type==="pcs_cm")st.pcs=N(st.pcs)+N(n.pcs)});t.voided=true;t.status="Dibatalkan";t.production="Dibatalkan";t.remaining=0;saveDB();renderAll()}
+function renderTransactions(){const el=$("transactionTable");if(!DB.transactions.length){el.innerHTML='<div class="empty">Belum ada transaksi.</div>';return}el.innerHTML=`<table><thead><tr><th>Invoice</th><th>Tanggal</th><th>Pelanggan</th><th>Total</th><th>Dibayar</th><th>Sisa</th><th>Status</th><th>Aksi</th></tr></thead><tbody>${DB.transactions.map(t=>{const c=transactionCustomer(t);return`<tr><td><b>${esc(t.invoice)}</b></td><td>${dateText(t.date)}</td><td>${esc(c.name||"Umum")}</td><td>${money(t.total)}</td><td>${money(t.paid)}</td><td><b>${money(t.remaining)}</b></td><td><span class="badge ${t.voided?"bad":t.remaining<=0?"ok":t.paid>0?"warn":"bad"}">${esc(t.voided?"Dibatalkan":t.status)}</span></td><td><div class="actions"><button class="primary" onclick="showInvoice('${t.id}')">Invoice</button>${!t.voided&&t.remaining>0?`<button class="success" onclick="openPayment('${t.id}')">Bayar Sisa</button>`:""}${!t.voided&&N(t.paid)===0?`<button class="danger" onclick="voidTransaction('${t.id}')">Batalkan</button><button onclick="deleteTransaction('${t.id}')">Hapus</button>`:""}</div></td></tr>`}).join("")}</tbody></table>`}
+
+/* ============================================================
+   11. INVOICE ENGINE — 20 cm × 8 cm
+   ============================================================ */
+function showInvoice(id){
+  const t=byId(DB.transactions,id);if(!t)return alert("Transaksi tidak ditemukan.");const c=transactionCustomer(t);
+  $("invoicePrint").innerHTML=`<div class="invoice-head"><div><div class="invoice-title">RATUPRINTING</div><div>Nota / Invoice Percetakan</div></div><div class="invoice-meta"><b>${esc(t.invoice)}</b><br>${dateText(t.date)}<br>Pelanggan: ${esc(c?.name||"Umum")}</div></div><table><thead><tr><th>Produk</th><th>Qty</th><th>Harga</th><th>Jumlah</th></tr></thead><tbody>${t.items.map(i=>{const detail=i.type==="custom"&&i.showSizeInInvoice!==false?`<div style="font-size:.82em">Ukuran: ${N(i.width)} × ${N(i.height)} cm</div>`:"";return`<tr><td>${esc(i.name)}${detail}</td><td>${N(i.qty)}</td><td>${money(i.price)}</td><td>${money(N(i.price)*N(i.qty))}</td></tr>`}).join("")}</tbody></table><div class="invoice-foot"><div>Metode awal: ${esc(t.payment||"-")}<br>Status produksi: ${esc(t.production||"-")}<br><b>Status pembayaran: ${esc(t.status)}</b></div><div class="invoice-total">Subtotal ${money(t.subtotal||t.total)}<br>Diskon ${money(t.discount)}<br><b>TOTAL ${money(t.total)}</b><br>Dibayar ${money(t.paid)}<br><b>Sisa ${money(t.remaining)}</b></div></div>`;openModal("invoiceModal")
+}
+
+/* ============================================================
+   12. REVENUE / DASHBOARD / REPORT ENGINE
+   ============================================================ */
+function startOfDay(d=new Date()){return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+function startOfMonth(d=new Date()){return new Date(d.getFullYear(),d.getMonth(),1)}
+function startOfYear(d=new Date()){return new Date(d.getFullYear(),0,1)}
+function sumPayments(filter){return paymentEvents().filter(filter).reduce((s,p)=>s+N(p.amount),0)}
+function revenueMetrics(){const now=new Date(),day=startOfDay(now),month=startOfMonth(now),year=startOfYear(now);return{today:sumPayments(p=>new Date(p.date)>=day),month:sumPayments(p=>new Date(p.date)>=month),year:sumPayments(p=>new Date(p.date)>=year),older:sumPayments(p=>new Date(p.date).getFullYear()<now.getFullYear()-1),receivable:DB.transactions.filter(t=>!t.voided).reduce((s,t)=>s+N(t.remaining),0)}}
+function last12Months(){const now=new Date(),arr=[];for(let i=11;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1),key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;arr.push({key,label:new Intl.DateTimeFormat("id-ID",{month:"short",year:"2-digit"}).format(d),value:0})}const map=Object.fromEntries(arr.map(x=>[x.key,x]));paymentEvents().forEach(p=>{const d=new Date(p.date),key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;if(map[key])map[key].value+=N(p.amount)});return arr}
+function renderBarChart(targetId,data){const el=$(targetId),W=1100,H=280,pad={l:65,r:20,t:25,b:45},max=Math.max(1,...data.map(x=>x.value)),cw=W-pad.l-pad.r,ch=H-pad.t-pad.b,bw=cw/data.length*.62,gap=cw/data.length;let svg=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Grafik pendapatan">`;for(let i=0;i<=4;i++){const y=pad.t+ch*(i/4),v=max*(1-i/4);svg+=`<line class="chart-grid" x1="${pad.l}" x2="${W-pad.r}" y1="${y}" y2="${y}"/><text class="chart-label" x="${pad.l-8}" y="${y+3}" text-anchor="end">${shortMoney(v)}</text>`}data.forEach((x,i)=>{const x0=pad.l+i*gap+(gap-bw)/2,h=x.value/max*ch,y=pad.t+ch-h;svg+=`<rect class="chart-bar" x="${x0}" y="${y}" width="${bw}" height="${h}" rx="4"><title>${x.label}: ${money(x.value)}</title></rect><text class="chart-label" x="${x0+bw/2}" y="${H-20}" text-anchor="middle">${esc(x.label)}</text>${x.value>0?`<text class="chart-value" x="${x0+bw/2}" y="${Math.max(12,y-6)}" text-anchor="middle">${shortMoney(x.value)}</text>`:""}`});svg+="</svg>";el.innerHTML=svg}
+function shortMoney(v){v=N(v);if(v>=1e9)return`Rp${(v/1e9).toFixed(1)}M`;if(v>=1e6)return`Rp${(v/1e6).toFixed(1)}jt`;if(v>=1e3)return`Rp${(v/1e3).toFixed(0)}rb`;return`Rp${v}`}
+function renderDashboard(){const r=revenueMetrics();$("incomeStats").innerHTML=[["Pendapatan Hari Ini",money(r.today)],["Pendapatan Bulan Ini",money(r.month)],["Pendapatan Tahun Ini",money(r.year)],["Pendapatan > 1 Tahun",money(r.older)],["Piutang / Sisa",money(r.receivable)]].map(x=>`<div class="card stat"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("");const lows=DB.materials.map(m=>({m,w:stockWarnings(m)})).filter(x=>x.w.length);$("lowStockList").innerHTML=lows.length?lows.map(({m,w})=>`<div class="low-item low-stock-card"><b>⚠ ${esc(m.name)}</b><div class="muted">${stockText(m)}<br>${w.map(esc).join("<br>")}</div></div>`).join(""):'<div class="empty">Semua bahan masih aman.</div>';$("recentTransactions").innerHTML=DB.transactions.slice(0,5).map(t=>`<div class="cart"><b>${esc(t.invoice)}</b><div class="muted">${dateText(t.date)} • ${money(t.total)} • ${esc(t.status)}</div></div>`).join("")||'<div class="empty">Belum ada transaksi.</div>';renderBarChart("dashboardChart",last12Months())}
+function renderReports(){const r=revenueMetrics();$("reportStats").innerHTML=[["Hari Ini",money(r.today)],["Bulan Ini",money(r.month)],["Tahun Ini",money(r.year)],["> 1 Tahun",money(r.older)],["Piutang",money(r.receivable)]].map(x=>`<div class="card stat"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("");renderBarChart("reportChart",last12Months());const p=paymentEvents();$("paymentHistory").innerHTML=p.length?`<table><thead><tr><th>Tanggal</th><th>Invoice</th><th>Jumlah Masuk</th><th>Metode</th><th>Keterangan</th></tr></thead><tbody>${p.map(e=>`<tr><td>${dateText(e.date)}</td><td>${esc(e.invoice)}</td><td><b>${money(e.amount)}</b></td><td>${esc(e.method)}</td><td>${esc(e.note||"")}</td></tr>`).join("")}</tbody></table>`:'<div class="empty">Belum ada pembayaran.</div>'}
+
+/* ============================================================
+   13. GLOBAL RENDER ENGINE
+   ============================================================ */
+function renderCashProductOptions(products=DB.products,selectedValue=$("cashProduct")?.value||""){
+  const select=$("cashProduct");
+  if(!select)return;
+  select.innerHTML='<option value="">-- Pilih Produk --</option>'+products.map(p=>`<option value="${p.id}">${esc(p.name)} — ${money(p.price)}</option>`).join("");
+  if(products.some(p=>p.id===selectedValue))select.value=selectedValue;
+}
+function filterCashProducts(){
+  const q=($("cashProductSearch").value||"").trim().toLowerCase();
+  const current=$("cashProduct").value;
+  const matched=!q?DB.products:DB.products.filter(p=>String(p.name||"").toLowerCase().includes(q));
+  renderCashProductOptions(matched,current);
+  const info=$("cashProductSearchInfo");
+  info.textContent=!q?"Ketik nama produk di pencarian. Produk dengan huruf/nama yang serupa akan langsung muncul.":matched.length?`${matched.length} produk ditemukan untuk pencarian “${$("cashProductSearch").value.trim()}”.`:`Produk tidak ditemukan.`;
+}
+function renderSelectors(){
+  renderCashProductOptions(DB.products);
+  $("cashCustomer").innerHTML='<option value="">Umum / Pelanggan Baru</option>'+DB.customers.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
+  const search=$("cashProductSearch");if(search&&search.value.trim())filterCashProducts();
+}
+function renderAll(){renderSelectors();renderCart();renderMaterials();renderProducts();renderCustomers();renderProduction();renderTransactions();renderDashboard();renderReports()}
+
+/* ============================================================
+   14. THEME / BACKUP ENGINE
+   ============================================================ */
+function setTheme(theme){document.documentElement.dataset.theme=theme;localStorage.setItem(CONFIG.themeKey,theme)}
+function initTheme(){const t=localStorage.getItem(CONFIG.themeKey)||"dark";document.documentElement.dataset.theme=t;$("themeSelect").value=t}
+function backupData(){const a=document.createElement("a"),blob=new Blob([JSON.stringify(DB,null,2)],{type:"application/json"});a.href=URL.createObjectURL(blob);a.download=`RATUPRINTING-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function restoreData(e){const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!confirm("Restore akan mengganti data sekarang. Lanjutkan?"))return;DB={...baseDB(),...d};migrateDB(DB);saveDB();renderAll();alert("Restore berhasil.")}catch(err){alert("File backup tidak valid.")}};r.readAsText(f);e.target.value=""}
+function wipeAll(){if(!confirm("Hapus SEMUA data RATUPRINTING?"))return;if(!confirm("Konfirmasi terakhir: data tidak dapat dikembalikan kecuali ada backup."))return;DB=baseDB();CART=[];saveDB();renderAll()}
+
+initTheme();saveDB();renderAll();
+</script>
+</body>
+</html>
